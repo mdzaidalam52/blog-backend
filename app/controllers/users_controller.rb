@@ -18,7 +18,7 @@ class UsersController < ApplicationController
         user = User.find_by(email: params[:email])
         puts user.password_digest
         if user && user.authenticate(params[:password])
-            cookies["token"] = JWT.encode({id: user.id}, "SECRET")
+            response.headers["token"] = JWT.encode({id: user.id}, "SECRET")
             render status: 200, json: {msg: "Signed In Successfully"}
         else
             render status: 401, json: {errors: "Wrong credentials"}
@@ -26,15 +26,16 @@ class UsersController < ApplicationController
     end
 
     def logout
-        if request.cookies["token"]
+        if request.headers["token"]
             cookies.delete("token")
             render status:200, json: {msg: "Logged Out Successfully"}
         end
     end
 
     def profile
-        if cookies["token"] && JWT.decode(cookies["token"], "SECRET")
-            payload = JWT.decode(cookies["token"], "SECRET")
+        puts ("token: " + request.headers["token"])
+        if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
+            payload = JWT.decode(request.headers["token"], "SECRET")
             user = User.find(payload.first["id"])
             render json: user.as_json(only: [:email, :name, :followed_user_ids, :followed_by_user_ids])
         else
@@ -43,7 +44,7 @@ class UsersController < ApplicationController
     end
 
     def profiles
-        if cookies["token"] && JWT.decode(cookies["token"], "SECRET")
+        if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
             profiles = []
             ids = params[:ids]
             for i in 0..(ids.length-1)
