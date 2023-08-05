@@ -15,8 +15,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_144215) do
     t.string "name"
     t.string "password_digest"
     t.string "email"
-    t.integer "followed_user_ids"
-    t.integer "followed_by_user_ids"
+    t.text "followed_user_ids"
+    t.text "followed_by_user_ids"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

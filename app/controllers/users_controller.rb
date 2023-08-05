@@ -5,7 +5,7 @@ class UsersController < ApplicationController
     skip_before_action :verify_authenticity_token
 
     def signup 
-        user = User.new(email: params[:email], password: params[:password], name: params[:name])
+        user = User.new(email: params[:email], password: params[:password], name: params[:name], followed_user_ids: [], followed_by_user_ids: [])
 
         if user.save
             render status: 201, json: {msg: "Account Created Successfully"}

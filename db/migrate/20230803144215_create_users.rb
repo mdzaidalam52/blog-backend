@@ -4,8 +4,8 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :name
       t.string :password_digest
       t.string :email
-      t.integer :followed_user_ids, array: true, default: []
-      t.integer :followed_by_user_ids, array: true, default: []
+      t.text :followed_user_ids
+      t.text :followed_by_user_ids
       
       t.timestamps
     end
