@@ -24,6 +24,50 @@ class PostsController < ApplicationController
         render json: {"posts": get_serialized_data(posts)}
     end
 
+    def like 
+        if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
+            user_id = JWT.decode(request.headers["token"], "SECRET").first["id"]
+            post = Post.find(params[:id])
+            if post && post.likes.none? { |liker| user_id.to_s == liker}
+                current_list = post.likes
+                current_list << user_id.to_s
+                post.likes = current_list
+                post.save
+            end
+        end
+    end
+
+    def unlike
+        if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
+            user_id = JWT.decode(request.headers["token"], "SECRET").first["id"]
+            post = Post.find(params[:id])
+            if post
+                current_list = post.likes
+                current_list.select! { |liker| user_id.to_s != liker}
+                puts current_list
+                post.likes = current_list
+                post.save
+            end
+        end
+    end
+
+    def comment
+        if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
+            user_id = JWT.decode(request.headers["token"], "SECRET").first["id"]
+            user = User.find(user_id)
+            post = Post.find(params[:id])
+            if post
+                commenters_list = post.commenters
+                comment_list = post.comment
+                commenters_list << user.name
+                comment_list << params[:comment]
+                post.comment = comment_list
+                post.commenters = commenters_list
+                post.save
+            end
+        end
+    end
+
     def edit
         post = Post.find(params[:id])
         if (post && JWT.decode(request.headers["token"], "SECRET").first["id"] == post.user_id)
@@ -49,7 +93,7 @@ class PostsController < ApplicationController
         users = User.where("name": params[:author])
         posts = []
         for user in users
-            for post in Post.find_by("user_id": user.id)
+            for post in Post.where("user_id": user.id)
                 posts << PostSerializer.new(post).serializable_hash[:data][:attributes]
             end
         end
