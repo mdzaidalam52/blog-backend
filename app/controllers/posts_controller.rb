@@ -24,6 +24,11 @@ class PostsController < ApplicationController
         render json: {"posts": get_serialized_data(posts)}
     end
 
+    def get_post 
+        post = Post.find(params[:id])
+        render status: 200, json: {post: PostSerializer.new(post).serializable_hash[:data][:attributes]}
+    end
+
     def like 
         if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
             user_id = JWT.decode(request.headers["token"], "SECRET").first["id"]

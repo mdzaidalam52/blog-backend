@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   put "post/edit", to: "posts#edit"
   delete 'post/delete', to: 'posts#delete'
   get "post/search/author", to: "posts#search_by_author" #change
-  # get post by id
+  get "post/id", to: "posts#get_post"
   post "post/like", to: "posts#like"
   post "post/unlike", to: "posts#unlike"
   post "post/comment", to: "posts#comment"
