@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post "logout", to: "users#logout"
   get "profile", to: "users#profile"
   post "profiles", to: "users#profiles"
+  post "profiles/search", to: "users#get_profile_by_name"
 
   post "follow", to: "follows#follow"
   post "unfollow", to: "follows#unfollow"

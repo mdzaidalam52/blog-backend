@@ -56,4 +56,12 @@ class UsersController < ApplicationController
             render status: 401, json: {"error": "User not signed in"}
         end
     end
+
+    def get_profile_by_name
+        profiles = []
+        name = params[:name].downcase
+        puts "hello"
+        users = User.where("LOWER(name) LIKE ?", "%#{name}%")
+        render json: {"profiles": users}
+    end
 end
