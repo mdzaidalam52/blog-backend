@@ -94,15 +94,21 @@ class PostsController < ApplicationController
         end
     end
 
-    def search_by_author
-        users = User.where("name": params[:author])
-        posts = []
-        for user in users
-            for post in Post.where("user_id": user.id)
-                posts << PostSerializer.new(post).serializable_hash[:data][:attributes]
-            end
-        end
-        render status: 200, json: {"posts": posts}
+    def search_by_user_id
+        posts = Post.where(user_id: params[:id])
+        render json: {posts: get_serialized_data(posts)}
+    end
+
+    def search_by_title
+        title = params[:title].downcase
+        posts = Post.where("LOWER(title) LIKE ?", "%#{title}%")
+        render json: {posts: get_serialized_data(posts)}
+    end
+
+    def search_by_topic
+        topic = params[:topic].downcase
+        posts = Post.where("LOWER(topic) LIKE ?", "%#{topic}%")
+        render json: {posts: get_serialized_data(posts)}
     end
 
     private
