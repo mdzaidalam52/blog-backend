@@ -37,24 +37,21 @@ class UsersController < ApplicationController
         if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
             payload = JWT.decode(request.headers["token"], "SECRET")
             user = User.find(payload.first["id"])
-            render json: user.as_json(only: [:email, :name, :followed_user_ids, :followed_by_user_ids])
+            render json: user.as_json(only: [:id, :email, :name, :followed_user_ids, :followed_by_user_ids])
         else
             render status: 401, json: {"error": "User not signed in"}
         end
     end
 
     def profiles
-        if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
-            profiles = []
-            ids = params[:ids]
-            for i in 0..(ids.length-1)
-                profiles[profiles.length] = User.find(params[:ids][i]).as_json(only: [:email, :name, :followed_user_ids, :followed_by_user_ids])
-            end
-
-            render json: {"profiles": profiles}
-        else
-            render status: 401, json: {"error": "User not signed in"}
+    
+        profiles = []
+        ids = params[:ids]
+        for i in 0..(ids.length-1)
+            profiles[profiles.length] = User.find(params[:ids][i]).as_json(only: [:id, :email, :name, :followed_user_ids, :followed_by_user_ids])
         end
+
+        render json: {"profiles": profiles}
     end
 
     def get_profile_by_name
