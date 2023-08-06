@@ -12,4 +12,10 @@ Rails.application.routes.draw do
 
   post "follow", to: "follows#follow"
   post "unfollow", to: "follows#unfollow"
+
+  post "post/create", to: "posts#create"
+  get "post/latest", to: "posts#get_all_posts"
+  put "post/edit", to: "posts#edit"
+  delete 'post/delete', to: 'posts#delete'
+  get "post/search/author", to: "posts#search_by_author"
 end

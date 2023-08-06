@@ -4,6 +4,14 @@ class User < ApplicationRecord
   validates :name, presence: true
   serialize :followed_by_user_ids, JSON
   serialize :followed_user_ids, JSON
+
+  has_many(
+    :posts,
+    class_name: 'Post',
+    foreign_key: 'user_id',
+    inverse_of: :user,
+    dependent: :destroy
+  )
   
   def followed_by_user_ids=(value)
     super(value.is_a?(String) ? JSON.parse(value) : value)
