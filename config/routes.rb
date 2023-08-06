@@ -25,4 +25,5 @@ Rails.application.routes.draw do
   post "post/like", to: "posts#like"
   post "post/unlike", to: "posts#unlike"
   post "post/comment", to: "posts#comment"
+  get "posts/top", to: "posts#get_top_posts"
 end

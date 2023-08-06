@@ -113,6 +113,15 @@ class PostsController < ApplicationController
         render json: {posts: get_serialized_data(posts)}
     end
 
+    def get_top_posts
+        posts = Post.all
+        top_posts = posts.sort_by do |post|
+            post_total_points = post.views + post.likes.length*5 + post.commenters.uniq.length*10
+            post_total_points
+        end
+        top_posts.reverse
+    end
+
     private
 
     def get_serialized_data(posts)
