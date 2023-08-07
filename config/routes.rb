@@ -6,7 +6,6 @@ Rails.application.routes.draw do
 
   post "signup", to: "users#signup"
   post "signin", to: "users#signin"
-  post "logout", to: "users#logout"
   get "profile", to: "users#profile"
   post "profiles", to: "users#profiles"
   post "profiles/search", to: "users#get_profile_by_name"
