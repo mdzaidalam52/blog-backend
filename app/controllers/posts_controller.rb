@@ -139,7 +139,7 @@ class PostsController < ApplicationController
             post_total_points = post.views + post.likes.length*5 + post.commenters.uniq.length*10
             post_total_points
         end
-        top_posts.reverse
+        render json: {posts: get_serialized_data(top_posts.reverse)}
     end
 
     def recommended_posts 
