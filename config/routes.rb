@@ -26,4 +26,5 @@ Rails.application.routes.draw do
   post "post/unlike", to: "posts#unlike"
   post "post/comment", to: "posts#comment"
   get "posts/top", to: "posts#get_top_posts"
+  post "post/search/author", to: "posts#search_by_name"
 end

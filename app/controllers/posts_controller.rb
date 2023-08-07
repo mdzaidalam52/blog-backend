@@ -121,6 +121,18 @@ class PostsController < ApplicationController
         render json: {posts: get_serialized_data(posts)}
     end
 
+    def search_by_name
+        users = User.where("LOWER(name) LIKE ?", "%#{params[:name].downcase}%")
+        posts = []
+        for user in users
+            for post in user.posts 
+                posts << post
+            end
+        end
+
+        render json: {posts: get_serialized_data(posts)}
+    end
+
     def get_top_posts
         posts = Post.all
         top_posts = posts.sort_by do |post|
