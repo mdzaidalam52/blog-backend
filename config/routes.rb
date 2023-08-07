@@ -27,4 +27,5 @@ Rails.application.routes.draw do
   post "post/comment", to: "posts#comment"
   get "posts/top", to: "posts#get_top_posts"
   post "post/search/author", to: "posts#search_by_name"
+  post "post/recommended", to: "posts#recommended_posts"
 end

@@ -28,8 +28,8 @@ class PostsController < ApplicationController
         post = Post.find(params[:id])
         if params[:viewing]
             if request.headers["token"]
-                if JWT.decode(requst.headers["token"], "SECRET") != post.user_id
-                    post.views = post.views+1
+                if JWT.decode(requst.headers["token"], "SECRET").first["id"] != post.user_id
+                    post.views = post.views + 1
                 end
             else
                 post.views = post.views+1
@@ -140,6 +140,24 @@ class PostsController < ApplicationController
             post_total_points
         end
         top_posts.reverse
+    end
+
+    def recommended_posts 
+        if (request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")) 
+            user_id = JWT.decode(request.headers["token"], "SECRET").first["id"]
+            posts = Post.where(user_id: user_id)
+            puts "hey"
+            distinct_topics = posts.map { |post|
+                post[:topic]
+            }.uniq
+            posts = []
+            for topic in distinct_topics
+                for post in Post.where("LOWER(topic) LIKE ?", "%#{topic.downcase}%").where.not(user_id: user_id)
+                    posts << post
+                end
+            end
+            render json: {posts: get_serialized_data(posts)}
+        end
     end
 
     private
