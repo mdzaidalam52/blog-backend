@@ -33,9 +33,7 @@ class UsersController < ApplicationController
     end
 
     def profile
-        puts ("token: " + request.headers["token"])
         if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
-            payload = JWT.decode(request.headers["token"], "SECRET")
             user = User.find(payload.first["id"])
             render json: user.as_json(only: [:id, :email, :name, :followed_user_ids, :followed_by_user_ids])
         else

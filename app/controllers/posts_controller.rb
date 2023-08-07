@@ -8,7 +8,7 @@ class PostsController < ApplicationController
         if request.headers["token"] && JWT.decode(request.headers["token"], "SECRET")
             user_id = JWT.decode(request.headers["token"], "SECRET").first["id"]
             user = User.find(user_id)
-            post = Post.new("title": params["title"], "topic": params["topic"], "description": params["description"], "body": params["body"], "image": params["image"], "user": user, "likes": ["hello"], "comment": ["hello"], "commenters": ["hello"], "views": 0)
+            post = Post.new("title": params["title"], "topic": params["topic"], "description": params["description"], "body": params["body"], "image": params["image"], "user": user, "likes": [], "comment": [], "commenters": [], "views": 0)
             if post.save
                 render status: 201, json: {msg: "Post Created Successfully"}
             else
@@ -26,7 +26,15 @@ class PostsController < ApplicationController
 
     def get_post 
         post = Post.find(params[:id])
-        post.views = post.views+1
+        if params[:viewing]
+            if request.headers["token"]
+                if JWT.decode(requst.headers["token"], "SECRET") != post.user_id
+                    post.views = post.views+1
+                end
+            else
+                post.views = post.views+1
+            end
+        end
         post.save
         render status: 200, json: {post: PostSerializer.new(post).serializable_hash[:data][:attributes]}
     end
