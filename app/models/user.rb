@@ -4,6 +4,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   serialize :followed_by_user_ids, JSON
   serialize :followed_user_ids, JSON
+  serialize :saved_posts, JSON
 
   has_many(
     :posts,
@@ -26,6 +27,14 @@ class User < ApplicationRecord
   end
 
   def followed_user_ids
+    super || []
+  end
+
+  def saved_posts=(value)
+    super(value.is_a?(String) ? JSON.parse(value) : value)
+  end
+
+  def saved_posts
     super || []
   end
 end
